@@ -1,10 +1,10 @@
 <template>
-  <div>home</div>
+  <div>question</div>
 </template>
 
 <script>
 export default {
-  name: "home",
+  name: "queation",
   components: {},
   mixins: [],
   props: {},
