@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "video",
+  name: "videos",
   components: {},
   mixins: [],
   props: {},
@@ -17,7 +17,7 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {},
 };
 </script>
 
