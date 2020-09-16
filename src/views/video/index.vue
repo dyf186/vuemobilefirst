@@ -1,10 +1,14 @@
 <template>
-  <div>video</div>
+  <div class="container">
+    <van-skeleton title avatar :row="3"></van-skeleton>
+    <van-skeleton title avatar :row="3"></van-skeleton>
+    <van-skeleton title avatar :row="3"></van-skeleton>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "videos",
+  name: "video-index",
   components: {},
   mixins: [],
   props: {},
@@ -21,4 +25,8 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.van-skeleton {
+  margin-top: 10px;
+}
+</style>

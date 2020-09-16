@@ -1,10 +1,10 @@
 <template>
-  <div>home</div>
+  <div class="container">home</div>
 </template>
 
 <script>
 export default {
-  name: "home",
+  name: "home-index",
   components: {},
   mixins: [],
   props: {},
@@ -17,7 +17,7 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {},
 };
 </script>
 

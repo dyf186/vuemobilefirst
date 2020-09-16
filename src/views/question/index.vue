@@ -1,10 +1,14 @@
 <template>
-  <div>question</div>
+  <div class="container">
+    <van-skeleton title :row="3"></van-skeleton>
+    <van-skeleton title :row="3"></van-skeleton>
+    <van-skeleton title :row="3"></van-skeleton>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "queation",
+  name: "queation-index",
   components: {},
   mixins: [],
   props: {},
@@ -17,8 +21,12 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {},
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.van-skeleton {
+  margin-top: 10px;
+}
+</style>

@@ -1,10 +1,10 @@
 <template>
-  <div>user</div>
+  <div class="container">user</div>
 </template>
 
 <script>
 export default {
-  name: "user",
+  name: "user-index",
   components: {},
   mixins: [],
   props: {},
@@ -17,7 +17,7 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {},
 };
 </script>
 

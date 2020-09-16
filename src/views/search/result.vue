@@ -1,10 +1,12 @@
 <template>
-  <div>result</div>
+  <div class="container">
+    <van-nav-bar title="搜索结果" left-arrow @click-left="$router.back()"></van-nav-bar>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "result",
+  name: "search-result",
   components: {},
   mixins: [],
   props: {},
@@ -17,7 +19,7 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {},
 };
 </script>
 

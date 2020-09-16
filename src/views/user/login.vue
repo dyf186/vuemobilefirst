@@ -1,10 +1,12 @@
 <template>
-  <div>login</div>
+  <div class="page-user-chat">
+    <van-nav-bar left-arrow @click-lert="$router.back()" title="登录"></van-nav-bar>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "login",
+  name: "user-login",
   components: {},
   mixins: [],
   props: {},
@@ -17,7 +19,7 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {},
 };
 </script>
 
