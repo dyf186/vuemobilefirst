@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { apiUserLogin } from "@/api/user.js";
 export default {
   name: "user-login",
   components: {},
@@ -38,8 +39,8 @@ export default {
   data() {
     return {
       loginform: {
-        mobile: "",
-        code: "",
+        mobile: "13911111111",
+        code: "246810",
       },
     };
   },

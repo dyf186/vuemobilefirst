@@ -11,6 +11,10 @@ export default new Vuex.Store({
         user: JSON.parse(localStorage.getItem(USER_KEY) || "{}")
     },
     mutations: {
+        // 模拟删除token数据
+        clearToken(state) {
+            delete state.user.token;
+        },
         // 修改/更新用户信息
         // data:{token:xx,refresh_token:xx}
         updateUser(state, data) {

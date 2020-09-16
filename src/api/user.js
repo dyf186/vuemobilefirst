@@ -1,8 +1,8 @@
 // 导入axios模块
-import request from "@/utils/request.js";
+import instance from "@/utils/request.js";
 
 export function apiUserLogin({ mobile, code }) {
-    return request({
+    return instance({
         url: "/app/v1_0/authorizations",
         method: "post",
         data: {
