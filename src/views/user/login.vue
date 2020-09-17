@@ -42,7 +42,14 @@
       </ValidationObserver>
     </van-cell-group>
     <div class="login-btn">
-      <van-button type="info" size="small" round block @click="login()"
+      <van-button
+        :loading="isLogin"
+        loading-text="登录中..."
+        type="info"
+        size="small"
+        round
+        block
+        @click="login()"
         >登录</van-button
       >
     </div>
@@ -62,6 +69,7 @@ export default {
   props: {},
   data() {
     return {
+      isLogin: false,
       loginform: {
         mobile: "13911111111",
         code: "246810"
@@ -80,6 +88,7 @@ export default {
       if (!valid) {
         return false;
       }
+      this.isLogin = true;
       try {
         const result = await apiUserLogin(this.loginform);
         this.$store.commit("updateUser", result);
@@ -89,6 +98,7 @@ export default {
         console.log("666");
         this.$toast.fail("手机号或验证码错误" + err);
       }
+      this.isLogin = false;
     }
   }
 };
