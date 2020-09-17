@@ -31,7 +31,7 @@
               <van-icon
                 name="close"
                 style="float:right;"
-                @click="displayDialog()"
+                @click="displayDialog(item.art_id.toString())"
               ></van-icon>
               <span>作者:{{ item.aut_name }}</span>
               &nbsp;
@@ -44,7 +44,11 @@
         </van-cell>
       </van-list>
     </van-pull-refresh>
-    <more-action v-model="showDialog"></more-action>
+    <more-action
+      v-model="showDialog"
+      :articleID="nowArticleID"
+      @dislikeSuccess="handleDislikeSuccess"
+    ></more-action>
   </div>
 </template>
 
@@ -65,6 +69,7 @@ export default {
   },
   data() {
     return {
+      nowArticleID: "",
       showDialog: false,
       articleList: [],
       ts: Date.now(),
@@ -83,8 +88,15 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    displayDialog() {
+    handleDislikeSuccess() {
+      const index = this.articleList.findIndex(
+        item => item.art_id.toString() === this.nowArticleID
+      );
+      this.articleList.splice(index, 1);
+    },
+    displayDialog(artID) {
       this.showDialog = true;
+      this.nowArticleID = artID;
     },
     async getArticleList() {
       const result = await apiArticleList({

@@ -7,7 +7,11 @@
       colse-on-click-overlay
     >
       <van-cell-group v-if="isOneLevel">
-        <van-cell icon="location-o" title="不感兴趣"></van-cell>
+        <van-cell
+          icon="location-o"
+          title="不感兴趣"
+          @click="articleDislike()"
+        ></van-cell>
         <van-cell
           icon="location-o"
           title="反馈垃圾内容"
@@ -32,11 +36,16 @@
 </template>
 
 <script>
+import { apiArticleDislike } from "@/api/article";
 export default {
   name: "com-moreaction",
   components: {},
   mixins: [],
   props: {
+    articleID: {
+      type: String,
+      required: true
+    },
     value: {
       type: Boolean,
       default: false
@@ -54,7 +63,17 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    async articleDislike() {
+      // 不感兴趣后端接口尚未完成
+      // const result = await apiArticleDislike(this.articleID);
+      // console.log(result);
+      this.$toast.success("处理成功!");
+      // 关闭弹窗
+      this.$emit("input", false);
+      this.$emit("dislikeSuccess");
+    }
+  }
 };
 </script>
 

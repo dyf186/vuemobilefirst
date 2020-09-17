@@ -10,3 +10,12 @@ export function apiArticleList({ channel_id, timestamp }) {
         }
     });
 }
+export function apiArticleDislike(articleID) {
+    return request({
+        url: "/app/v1_0/article/dislikes",
+        method: "post",
+        data: {
+            target: articleID
+        }
+    });
+}
