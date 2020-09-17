@@ -54,7 +54,8 @@ export default {
         timestamp: this.ts
       });
       console.log(result);
-      this.articleList = result.results;
+      // this.articleList = result.results;
+      return result;
     },
     onRefresh() {
       setTimeout(() => {
@@ -63,16 +64,24 @@ export default {
         this.$toast("刷新成功");
       }, 1000);
     },
-    onLoad() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        this.loading = false;
-        if (this.list.length >= 40) {
-          this.finished = true; // 停止加载
-        }
-      }, 1000);
+    async onLoad() {
+      const articles = await this.getArticleList();
+      if (articles.results.length > 0) {
+        this.articleList.push(...articles.results);
+        this.ts = articles.pre_timestamp;
+      } else {
+        this.finished = true;
+      }
+      this.loading = false;
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.list.push(this.list.length + 1);
+      //   }
+      //   this.loading = false;
+      //   if (this.list.length >= 40) {
+      //     this.finished = true; // 停止加载
+      //   }
+      // }, 1000);
     }
   }
 };
