@@ -1,13 +1,15 @@
 <template>
   <div class="scroll-wrapper">
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <van-cell v-for="item in list" :key="item" :title="item"></van-cell>
-    </van-list>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <van-cell v-for="item in list" :key="item" :title="item"></van-cell>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -21,7 +23,8 @@ export default {
     return {
       list: [], // 接收数据
       loading: false, // 加载动画
-      finished: false // 控制是否继续加载
+      finished: false, // 控制是否继续加载
+      isLoading: false
     };
   },
   computed: {},
@@ -31,6 +34,13 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    onRefresh() {
+      setTimeout(() => {
+        this.onLoad();
+        this.isLoading = false;
+        this.$toast("刷新成功");
+      }, 1000);
+    },
     onLoad() {
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
