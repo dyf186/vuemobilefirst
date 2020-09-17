@@ -8,6 +8,10 @@ import "vant/lib/index.css";
 import "@/assets/css/global.less";
 import "amfe-flexible/index.min.js";
 import "@/utils/validate.js";
+import * as filters from "@/utils/filters";
+Object.keys(filters).forEach(item => {
+    Vue.filter(item, filters[item]);
+});
 
 Vue.prototype.$sleep = time => {
     return new Promise(resolve => {
