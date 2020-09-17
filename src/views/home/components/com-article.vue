@@ -1,6 +1,11 @@
 <template>
   <div class="scroll-wrapper">
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+    <van-pull-refresh
+      v-model="isLoading"
+      @refresh="onRefresh"
+      :success-text="downSuccessText"
+      :success-duration="1000"
+    >
       <van-list
         v-model="loading"
         :finished="finished"
@@ -69,6 +74,7 @@ export default {
   },
   data() {
     return {
+      downSuccessText: "",
       nowArticleID: "",
       showDialog: false,
       articleList: [],
@@ -107,12 +113,22 @@ export default {
       // this.articleList = result.results;
       return result;
     },
-    onRefresh() {
-      setTimeout(() => {
-        this.onLoad();
-        this.isLoading = false;
-        this.$toast("刷新成功");
-      }, 1000);
+    async onRefresh() {
+      await this.$sleep(800);
+      const articles = await this.getArticleList();
+      if (articles.results.length > 0) {
+        this.articleList.unshift(...articles.results);
+        this.ts = articles.pre_timestamp;
+        this.downSuccessText = "文章更新成功";
+      } else {
+        this.downSuccessText = "文章已经是最新的";
+      }
+      this.isLoading = false;
+      // setTimeout(() => {
+      //   this.onLoad();
+      //   this.isLoading = false;
+      //   this.$toast("刷新成功");
+      // }, 1000);
     },
     async onLoad() {
       await this.$sleep(800);
