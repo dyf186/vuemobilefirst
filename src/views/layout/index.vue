@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <van-nav-bar title="头条" right-text="搜索" @click-right="$router.push('/search')"></van-nav-bar>
+    <van-nav-bar
+      title="头条"
+      right-text="搜索"
+      @click-right="$router.push('/search')"
+    ></van-nav-bar>
     <div class="my-wrapper">
       <router-view></router-view>
     </div>
@@ -28,7 +32,7 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {},
+  methods: {}
 };
 </script>
 
@@ -41,7 +45,7 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    padding-top: 92px;
+    // padding-top: 92px;// 修改上边距
     padding-bottom: 100px;
     box-sizing: border-box;
   }
