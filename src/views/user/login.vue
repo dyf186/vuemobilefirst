@@ -8,26 +8,38 @@
     ></van-nav-bar>
     <!-- 表单部分 -->
     <van-cell-group>
-      <van-field
-        v-model="loginform.mobile"
-        type="text"
-        placeholder="请输入手机号码"
-        label="手机号"
-        required
-        clearable
-      ></van-field>
-      <van-field
-        v-model="loginform.code"
-        type="password"
-        placeholder="请输入验证码"
-        label="验证码"
-        required
-        clearable
-      >
-        <van-button slot="button" size="small" type="primary"
-          >发送验证码</van-button
+      <ValidationObserver ref="loginFormRef">
+        <ValidationProvider
+          name="手机号"
+          rules="required|phone"
+          v-slot="{ errors }"
         >
-      </van-field>
+          <van-field
+            v-model="loginform.mobile"
+            type="text"
+            placeholder="请输入手机号码"
+            label="手机号"
+            required
+            clearable
+            :error-message="errors[0]"
+          ></van-field>
+        </ValidationProvider>
+        <ValidationProvider name="验证码" rules="required" v-slot="{ errors }">
+          <van-field
+            v-model="loginform.code"
+            type="password"
+            placeholder="请输入验证码"
+            label="验证码"
+            required
+            clearable
+            :error-message="errors[0]"
+          >
+            <van-button slot="button" size="small" type="primary"
+              >发送验证码</van-button
+            >
+          </van-field>
+        </ValidationProvider>
+      </ValidationObserver>
     </van-cell-group>
     <div class="login-btn">
       <van-button type="info" size="small" round block @click="login()"
@@ -38,10 +50,14 @@
 </template>
 
 <script>
+import { ValidationProvider, ValidationObserver } from "vee-validate";
 import { apiUserLogin } from "@/api/user.js";
 export default {
   name: "user-login",
-  components: {},
+  components: {
+    ValidationProvider,
+    ValidationObserver
+  },
   mixins: [],
   props: {},
   data() {
@@ -60,6 +76,10 @@ export default {
   destroyed() {},
   methods: {
     async login() {
+      const valid = await this.$refs.loginFormRef.validate();
+      if (!valid) {
+        return false;
+      }
       try {
         const result = await apiUserLogin(this.loginform);
         this.$store.commit("updateUser", result);
