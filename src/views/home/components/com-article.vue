@@ -65,6 +65,7 @@ export default {
       }, 1000);
     },
     async onLoad() {
+      await this.$sleep(800);
       const articles = await this.getArticleList();
       if (articles.results.length > 0) {
         this.articleList.push(...articles.results);
