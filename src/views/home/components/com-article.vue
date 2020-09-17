@@ -28,6 +28,11 @@
               </van-grid-item>
             </van-grid>
             <p>
+              <van-icon
+                name="close"
+                style="float:right;"
+                @click="displayDialog()"
+              ></van-icon>
               <span>作者:{{ item.aut_name }}</span>
               &nbsp;
               <span>评论:{{ item.comm_count }}</span>
@@ -39,14 +44,18 @@
         </van-cell>
       </van-list>
     </van-pull-refresh>
+    <more-action v-model="showDialog"></more-action>
   </div>
 </template>
 
 <script>
+import MoreAction from "./com-moreaction";
 import { apiArticleList } from "@/api/article.js";
 export default {
   name: "com-article",
-  components: {},
+  components: {
+    MoreAction
+  },
   mixins: [],
   props: {
     channelID: {
@@ -56,6 +65,7 @@ export default {
   },
   data() {
     return {
+      showDialog: false,
       articleList: [],
       ts: Date.now(),
       list: [], // 接收数据
@@ -73,6 +83,9 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    displayDialog() {
+      this.showDialog = true;
+    },
     async getArticleList() {
       const result = await apiArticleList({
         channel_id: this.channelID,
