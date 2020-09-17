@@ -7,20 +7,32 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <van-cell v-for="item in list" :key="item" :title="item"></van-cell>
+        <van-cell
+          v-for="item in articleList"
+          :key="item.art_id.toString()"
+          :title="item.title"
+        ></van-cell>
       </van-list>
     </van-pull-refresh>
   </div>
 </template>
 
 <script>
+import { apiArticleList } from "@/api/article.js";
 export default {
   name: "com-article",
   components: {},
   mixins: [],
-  props: {},
+  props: {
+    channelID: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
+      articleList: [],
+      ts: Date.now(),
       list: [], // 接收数据
       loading: false, // 加载动画
       finished: false, // 控制是否继续加载
@@ -29,11 +41,21 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.getArticleList();
+  },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    async getArticleList() {
+      const result = await apiArticleList({
+        channel_id: this.channelID,
+        timestamp: this.ts
+      });
+      console.log(result);
+      this.articleList = result.results;
+    },
     onRefresh() {
       setTimeout(() => {
         this.onLoad();
