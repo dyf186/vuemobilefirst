@@ -4,13 +4,7 @@
       >清除token</van-button
     > -->
     <van-tabs v-model="activeChannelIndex">
-      <van-tab title="推荐">
-        <com-article></com-article>
-      </van-tab>
-      <van-tab title="数据库">
-        <com-article></com-article>
-      </van-tab>
-      <van-tab title="后端">
+      <van-tab v-for="item in channelList" :key="item.id" :title="item.name">
         <com-article></com-article>
       </van-tab>
     </van-tabs>
@@ -18,6 +12,7 @@
 </template>
 
 <script>
+import { apiChannelList } from "@/api/channel.js";
 import ComArticle from "./components/com-article";
 export default {
   name: "home-index",
@@ -26,16 +21,25 @@ export default {
   props: {},
   data() {
     return {
+      channelList: [],
       activeChannelIndex: 0
     };
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.getChannelList();
+  },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    async getChannelList() {
+      const result = await apiChannelList();
+      console.log(result);
+      this.channelList = result.channels;
+    }
+  }
 };
 </script>
 
