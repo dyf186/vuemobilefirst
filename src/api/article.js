@@ -10,12 +10,25 @@ export function apiArticleList({ channel_id, timestamp }) {
         }
     });
 }
+// 不感兴趣
 export function apiArticleDislike(articleID) {
     return request({
         url: "/app/v1_0/article/dislikes",
         method: "post",
         data: {
             target: articleID
+        }
+    });
+}
+// 举报文章
+export function apiArticleReport({ articleID, type, remark = "" }) {
+    return request({
+        url: "/app/v1_0/article/reports",
+        method: "post",
+        data: {
+            target: articleID,
+            type,
+            remark
         }
     });
 }
