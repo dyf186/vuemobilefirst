@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import Vant from "vant";
+import { Lazyload } from "vant";
 import "vant/lib/index.css";
 import "@/assets/css/global.less";
 import "amfe-flexible/index.min.js";
@@ -15,6 +16,7 @@ Vue.prototype.$sleep = time => {
         }, time);
     });
 };
+Vue.use(Lazyload);
 Vue.use(Vant);
 
 Vue.config.productionTip = false;
