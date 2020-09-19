@@ -4,9 +4,10 @@
       >清除token</van-button
     > -->
     <van-tabs v-model="activeChannelIndex">
-      <div slot="nav-right" class="channel-more">
+      <div slot="nav-right" class="channel-more" @click="showChannel = true">
         <van-icon name="wap-nav"></van-icon>
       </div>
+      <com-channel v-model="showChannel"></com-channel>
       <van-tab v-for="item in channelList" :key="item.id" :title="item.name">
         <com-article :channelID="item.id"></com-article>
       </van-tab>
@@ -15,15 +16,17 @@
 </template>
 
 <script>
+import ComChannel from "./components/com-channel";
 import { apiChannelList } from "@/api/channel.js";
 import ComArticle from "./components/com-article";
 export default {
   name: "home-index",
-  components: { ComArticle },
+  components: { ComArticle, ComChannel },
   mixins: [],
   props: {},
   data() {
     return {
+      showChannel: false,
       channelList: [],
       activeChannelIndex: 0
     };
