@@ -28,7 +28,11 @@
           </div>
         </div>
         <van-grid class="channel-content" :gutter="10" clickable>
-          <van-grid-item v-for="(item, k) in channelList" :key="item.id">
+          <van-grid-item
+            v-for="(item, k) in channelList"
+            :key="item.id"
+            @click="clickChannel(k)"
+          >
             <span
               class="text"
               :style="{ color: k === activeChannelIndex ? 'red' : '' }"
@@ -114,6 +118,10 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    clickChannel(index) {
+      this.$emit("input", false);
+      this.$emit("update:activeChannelIndex", index);
+    },
     userToRest(channelID, index) {
       this.channelList.splice(index, 1);
       apiChannelDel(channelID);
