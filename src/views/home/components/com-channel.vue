@@ -27,6 +27,7 @@
             >
               {{ item.name }}
             </span>
+            <van-icon v-if="k > 0" class="close-icon" name="close"></van-icon>
           </van-grid-item>
         </van-grid>
       </div>
