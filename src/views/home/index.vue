@@ -7,7 +7,11 @@
       <div slot="nav-right" class="channel-more" @click="showChannel = true">
         <van-icon name="wap-nav"></van-icon>
       </div>
-      <com-channel v-model="showChannel"></com-channel>
+      <com-channel
+        v-model="showChannel"
+        :channelList="channelList"
+        :activeChannelIndex="activeChannelIndex"
+      ></com-channel>
       <van-tab v-for="item in channelList" :key="item.id" :title="item.name">
         <com-article :channelID="item.id"></com-article>
       </van-tab>
@@ -42,7 +46,6 @@ export default {
   methods: {
     async getChannelList() {
       const result = await apiChannelList();
-      console.log(result);
       this.channelList = result.channels;
     }
   }

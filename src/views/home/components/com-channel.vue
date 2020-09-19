@@ -20,8 +20,13 @@
           </div>
         </div>
         <van-grid class="channel-content" :gutter="10" clickable>
-          <van-grid-item v-for="value in 8" :key="value" text="文字">
-            <span class="text">文字</span>
+          <van-grid-item v-for="(item, k) in channelList" :key="item.id">
+            <span
+              class="text"
+              :style="{ color: k === activeChannelIndex ? 'red' : '' }"
+            >
+              {{ item.name }}
+            </span>
           </van-grid-item>
         </van-grid>
       </div>
@@ -53,6 +58,14 @@ export default {
     value: {
       type: Boolean,
       defalult: false
+    },
+    channelList: {
+      type: Array,
+      default: () => []
+    },
+    activeChannelIndex: {
+      type: Number,
+      default: 0
     }
   },
   data() {
