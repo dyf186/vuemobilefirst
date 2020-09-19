@@ -38,7 +38,11 @@
           </div>
         </div>
         <van-grid class="channel-content" :gutter="10" clickable>
-          <van-grid-item v-for="item in restChannel" :key="item.id">
+          <van-grid-item
+            v-for="item in restChannels"
+            :key="item.id"
+            @click="restToUser(item)"
+          >
             <div class="info">
               <span class="title">{{ item.name }}</span>
             </div>
@@ -50,7 +54,7 @@
 </template>
 
 <script>
-import { apiChannelAll } from "@/api/channel.js";
+import { apiChannelAll, apiChannelAdd } from "@/api/channel.js";
 export default {
   name: "com-channel",
   components: {},
@@ -75,7 +79,7 @@ export default {
     };
   },
   computed: {
-    restChannel() {
+    restChannels() {
       // 获取我的频道的全部id以数组形式展现出来
       const userChannelIds = this.channelList.map(item => {
         return item.id;
@@ -95,6 +99,10 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    restToUser(channel) {
+      this.channelList.push(channel);
+      apiChannelAdd(channel);
+    },
     async getChannelAll() {
       let result = await apiChannelAll();
       this.channelAll = result.channels;

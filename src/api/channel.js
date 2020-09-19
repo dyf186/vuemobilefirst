@@ -28,3 +28,15 @@ export function apiChannelAll() {
         method: 'get'
     })
 }
+export function apiChannelAdd(channel) {
+    return new Promise(function(resolve) {
+        let key = store.state.user.token ? CHANNEL_KEY_VIP : CHANNEL_KEY_TRAVEL
+        let localChannels = localStorage.getItem(key)
+        if (localChannels) {
+            let channels = JSON.parse(localChannels)
+            channels.push(channel)
+            localStorage.setItem(key, JSON.stringify(channels))
+            resolve()
+        }
+    })
+}
