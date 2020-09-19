@@ -16,7 +16,15 @@
             <span class="desc">点击进入频道</span>
           </div>
           <div>
-            <van-button type="danger" plain size="mini" round>编辑</van-button>
+            <van-button
+              style="padding:0px 15px;"
+              type="danger"
+              plain
+              size="mini"
+              round
+              @click="isEdit = !isEdit"
+              >{{ isEdit ? "完成" : "编辑" }}</van-button
+            >
           </div>
         </div>
         <van-grid class="channel-content" :gutter="10" clickable>
@@ -27,7 +35,11 @@
             >
               {{ item.name }}
             </span>
-            <van-icon v-if="k > 0" class="close-icon" name="close"></van-icon>
+            <van-icon
+              v-show="k > 0 && isEdit"
+              class="close-icon"
+              name="close"
+            ></van-icon>
           </van-grid-item>
         </van-grid>
       </div>
@@ -76,6 +88,7 @@ export default {
   },
   data() {
     return {
+      isEdit: false,
       channelAll: []
     };
   },
