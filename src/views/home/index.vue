@@ -4,6 +4,9 @@
       >清除token</van-button
     > -->
     <van-tabs v-model="activeChannelIndex">
+      <div slot="nav-right" class="channel-more">
+        <van-icon name="wap-nav"></van-icon>
+      </div>
       <van-tab v-for="item in channelList" :key="item.id" :title="item.name">
         <com-article :channelID="item.id"></com-article>
       </van-tab>
@@ -58,5 +61,18 @@ export default {
   /deep/ .van-tabs__line {
     background-color: #1989fa;
   }
+  /deep/ .van-tabs__wrap {
+    width: 90%;
+  }
+}
+.channel-more {
+  position: fixed;
+  right: 0;
+  background-color: #fff;
+  line-height: 88px;
+  height: 88px;
+  width: 90px;
+  text-align: center;
+  font-size: 40px;
 }
 </style>
