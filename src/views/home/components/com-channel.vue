@@ -117,6 +117,9 @@ export default {
     userToRest(channelID, index) {
       this.channelList.splice(index, 1);
       apiChannelDel(channelID);
+      if (this.channelList.length === index) {
+        this.$emit("update:activeChannelIndex", index - 1);
+      }
     },
     restToUser(channel) {
       this.channelList.push(channel);

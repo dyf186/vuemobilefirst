@@ -10,7 +10,7 @@
       <com-channel
         v-model="showChannel"
         :channelList="channelList"
-        :activeChannelIndex="activeChannelIndex"
+        :activeChannelIndex.sync="activeChannelIndex"
       ></com-channel>
       <van-tab v-for="item in channelList" :key="item.id" :title="item.name">
         <com-article :channelID="item.id"></com-article>
