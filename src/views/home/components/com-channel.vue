@@ -31,7 +31,7 @@
           <van-grid-item
             v-for="(item, k) in channelList"
             :key="item.id"
-            @click="clickChannel(k)"
+            @click="clickChannel(item.id, k)"
           >
             <span
               class="text"
@@ -118,7 +118,11 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    clickChannel(index) {
+    clickChannel(channelID, index) {
+      if (this.isEdit && index > 0) {
+        this.userToRest(channelID, index);
+        return false;
+      }
       this.$emit("input", false);
       this.$emit("update:activeChannelIndex", index);
     },
