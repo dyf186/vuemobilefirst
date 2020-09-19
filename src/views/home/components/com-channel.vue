@@ -38,7 +38,7 @@
           </div>
         </div>
         <van-grid class="channel-content" :gutter="10" clickable>
-          <van-grid-item v-for="item in channelAll" :key="item.id">
+          <van-grid-item v-for="item in restChannel" :key="item.id">
             <div class="info">
               <span class="title">{{ item.name }}</span>
             </div>
@@ -74,10 +74,21 @@ export default {
       channelAll: []
     };
   },
-  computed: {},
+  computed: {
+    restChannel() {
+      // 获取我的频道的全部id以数组形式展现出来
+      const userChannelIds = this.channelList.map(item => {
+        return item.id;
+      });
+      // 对全部频道进行筛选,包含返回false,不包含返回true
+      const rest = this.channelAll.filter(item => {
+        return !userChannelIds.includes(item.id);
+      });
+      return rest;
+    }
+  },
   watch: {},
   created() {
-    console.log("666");
     this.getChannelAll();
   },
   mounted() {},
@@ -86,7 +97,6 @@ export default {
   methods: {
     async getChannelAll() {
       let result = await apiChannelAll();
-      console.log(result);
       this.channelAll = result.channels;
     }
   }
