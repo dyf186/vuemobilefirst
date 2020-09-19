@@ -40,3 +40,13 @@ export function apiChannelAdd(channel) {
         }
     })
 }
+export function apiChannelDel(id) {
+    return new Promise(function(resolve) {
+        const key = store.state.user.token ? CHANNEL_KEY_VIP : CHANNEL_KEY_TRAVEL
+        const localChannels = localStorage.getItem(key)
+        let channels = JSON.parse(localChannels)
+        channels = channels.filter(item => item.id !== id)
+        localStorage.setItem(key, JSON.stringify(channels))
+        resolve()
+    })
+}

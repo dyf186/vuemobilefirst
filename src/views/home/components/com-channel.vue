@@ -39,6 +39,7 @@
               v-show="k > 0 && isEdit"
               class="close-icon"
               name="close"
+              @click="userToRest(item.id, k)"
             ></van-icon>
           </van-grid-item>
         </van-grid>
@@ -67,7 +68,7 @@
 </template>
 
 <script>
-import { apiChannelAll, apiChannelAdd } from "@/api/channel.js";
+import { apiChannelAll, apiChannelAdd, apiChannelDel } from "@/api/channel.js";
 export default {
   name: "com-channel",
   components: {},
@@ -113,6 +114,10 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    userToRest(channelID, index) {
+      this.channelList.splice(index, 1);
+      apiChannelDel(channelID);
+    },
     restToUser(channel) {
       this.channelList.push(channel);
       apiChannelAdd(channel);
