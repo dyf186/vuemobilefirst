@@ -38,9 +38,9 @@
           </div>
         </div>
         <van-grid class="channel-content" :gutter="10" clickable>
-          <van-grid-item v-for="value in 8" :key="value" text="文字">
+          <van-grid-item v-for="item in channelAll" :key="item.id">
             <div class="info">
-              <span class="title">文字</span>
+              <span class="title">{{ item.name }}</span>
             </div>
           </van-grid-item>
         </van-grid>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import { apiChannelAll } from "@/api/channel.js";
 export default {
   name: "com-channel",
   components: {},
@@ -69,15 +70,26 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      channelAll: []
+    };
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    console.log("666");
+    this.getChannelAll();
+  },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    async getChannelAll() {
+      let result = await apiChannelAll();
+      console.log(result);
+      this.channelAll = result.channels;
+    }
+  }
 };
 </script>
 

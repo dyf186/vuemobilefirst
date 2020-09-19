@@ -5,3 +5,9 @@ export function apiChannelList() {
         method: "get"
     });
 }
+export function apiChannelAll() {
+    return request({
+        url: '/app/v1_0/channels',
+        method: 'get'
+    })
+}
