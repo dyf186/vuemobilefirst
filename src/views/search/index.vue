@@ -37,8 +37,11 @@ export default {
         this.suggestionList = [];
         return false;
       }
-      const result = await apiSuggestionList({ q: newV });
-      this.suggestionList = result.options;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(async () => {
+        const result = await apiSuggestionList({ q: newV });
+        this.suggestionList = result.options;
+      }, 1000);
     }
   },
   created() {},
