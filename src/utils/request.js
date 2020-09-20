@@ -53,7 +53,6 @@ instance.interceptors.response.use(
                     token: result.data.data.token,
                     refresh_token: store.state.user.refresh_token
                 });
-                console.dir(error);
                 return instance(error.config);
             } catch (err) {
                 store.commit("clearUser");

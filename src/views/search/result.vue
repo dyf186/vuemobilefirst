@@ -12,13 +12,17 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <van-cell v-for="item in list" :key="item" :title="item"></van-cell>
+      <van-cell
+        v-for="item in searchList"
+        :key="item.art_id.toString()"
+        :title="item.title"
+      ></van-cell>
     </van-list>
   </div>
 </template>
 
 <script>
-import { apiSearchList } from "@/api/search";
+import { apiSearchList } from "@/api/search.js";
 export default {
   name: "search-result",
   components: {},
@@ -26,6 +30,8 @@ export default {
   props: {},
   data() {
     return {
+      page: 1,
+      per_page: 10,
       list: [],
       loading: false,
       finished: false,
@@ -34,31 +40,31 @@ export default {
   },
   computed: {
     q() {
-      return this.$router.params.q;
+      return this.$route.params.q;
     }
   },
   watch: {},
   created() {
-    this.getSearchList();
+    // this.getSearchList();
   },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    onLoad() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        this.loading = false;
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 1000);
-    },
-    async getSearchList() {
-      const result = await apiSearchList({ q: this.q });
-      this.searchList = result.results;
+    async onLoad() {
+      await this.$sleep(1000);
+      const result = await apiSearchList({
+        q: this.q,
+        page: this.page,
+        per_page: this.per_page
+      });
+      this.loading = false;
+      if (!result.results.length) {
+        this.finished = true;
+        return false;
+      }
+      this.searchList.push(...result.results);
+      this.page++;
     }
   }
 };
