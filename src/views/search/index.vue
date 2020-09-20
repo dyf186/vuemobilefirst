@@ -7,18 +7,18 @@
       placeholder="请输入搜索关键词"
     ></van-search>
     <van-cell-group>
-      <van-cell title="单元格" icon="search"></van-cell>
-      <van-cell title="单元格" icon="search"></van-cell>
-      <van-cell title="单元格" icon="search"></van-cell>
-      <van-cell title="单元格" icon="search"></van-cell>
-      <van-cell title="单元格" icon="search"></van-cell>
-      <van-cell title="单元格" icon="search"></van-cell>
-      <van-cell title="单元格" icon="search"></van-cell>
+      <van-cell
+        v-for="(item, k) in suggestionList"
+        :key="k"
+        :title="item"
+        icon="search"
+      ></van-cell>
     </van-cell-group>
   </div>
 </template>
 
 <script>
+import { apiSuggestionList } from "@/api/search";
 export default {
   name: "search-index",
   components: {},
@@ -26,11 +26,21 @@ export default {
   props: {},
   data() {
     return {
-      searchText: ""
+      searchText: "",
+      suggestionList: []
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+    searchText: async function(newV) {
+      if (!newV) {
+        this.suggestionList = [];
+        return false;
+      }
+      const result = await apiSuggestionList({ q: newV });
+      this.suggestionList = result.options;
+    }
+  },
   created() {},
   mounted() {},
   beforeDestroy() {},
