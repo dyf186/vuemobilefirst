@@ -7,12 +7,9 @@
       placeholder="请输入搜索关键词"
     ></van-search>
     <van-cell-group>
-      <van-cell
-        v-for="(item, k) in suggestionList"
-        :key="k"
-        :title="item"
-        icon="search"
-      ></van-cell>
+      <van-cell v-for="(item, k) in suggestionList" :key="k" icon="search">
+        <div slot="title" v-html="highlightCell(item, searchText)"></div>
+      </van-cell>
     </van-cell-group>
   </div>
 </template>
@@ -48,7 +45,13 @@ export default {
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    highlightCell(item, keywords) {
+      const reg = new RegExp(`${keywords}`, "i");
+      const rst = item.match(reg);
+      return item.replace(reg, `<span style="color:red">${rst[0]}</span>`);
+    }
+  }
 };
 </script>
 
