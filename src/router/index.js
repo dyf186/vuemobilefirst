@@ -56,7 +56,8 @@ const routes = [{
             import ("@/views/search/index.vue")
     },
     {
-        path: "/search/result",
+        path: "/search/result/:q",
+        name: 'result',
         component: () =>
             import ("@/views/search/result.vue")
     }

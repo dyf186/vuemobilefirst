@@ -5,9 +5,15 @@
     <van-search
       v-model.trim="searchText"
       placeholder="请输入搜索关键词"
+      @search="onSearch(searchText)"
     ></van-search>
     <van-cell-group>
-      <van-cell v-for="(item, k) in suggestionList" :key="k" icon="search">
+      <van-cell
+        v-for="(item, k) in suggestionList"
+        :key="k"
+        icon="search"
+        @click="onSearch(item)"
+      >
         <div slot="title" v-html="highlightCell(item, searchText)"></div>
       </van-cell>
     </van-cell-group>
@@ -46,6 +52,9 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    onSearch(keywords) {
+      this.$router.push({ name: "result", params: { q: keywords } });
+    },
     highlightCell(item, keywords) {
       const reg = new RegExp(`${keywords}`, "i");
       const rst = item.match(reg);
