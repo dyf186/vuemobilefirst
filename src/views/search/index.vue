@@ -33,7 +33,7 @@
           <span @click="isDeleteData = false">完成</span>
         </div>
       </van-cell>
-      <van-cell title="Vue 原码解析">
+      <van-cell v-for="(item, k) in suggestHistories" :key="k" :title="item">
         <van-icon
           v-show="isDeleteData"
           slot="right-icon"
@@ -47,6 +47,7 @@
 
 <script>
 import { apiSuggestionList } from "@/api/search";
+const SH = "suggest-histories";
 export default {
   name: "search-index",
   components: {},
@@ -54,6 +55,7 @@ export default {
   props: {},
   data() {
     return {
+      suggestHistories: JSON.parse(localStorage.getItem(SH)) || [],
       isDeleteData: false,
       searchText: "",
       suggestionList: []
@@ -79,6 +81,13 @@ export default {
   destroyed() {},
   methods: {
     onSearch(keywords) {
+      if (!keywords) {
+        return false;
+      }
+      const data = new Set(this.suggestHistories);
+      data.add(keywords);
+      this.suggestHistories = Array.from(data);
+      localStorage.setItem(SH, JSON.stringify(this.suggestHistories));
       this.$router.push({ name: "result", params: { q: keywords } });
     },
     highlightCell(item, keywords) {
