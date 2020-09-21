@@ -16,6 +16,12 @@
           v-for="item in articleList"
           :key="item.art_id.toString()"
           :title="item.title"
+          @click="
+            $router.push({
+              name: 'article',
+              params: { aid: item.art_id.toString() }
+            })
+          "
         >
           <template slot="label">
             <van-grid
@@ -36,7 +42,7 @@
               <van-icon
                 name="close"
                 style="float:right;"
-                @click="displayDialog(item.art_id.toString())"
+                @click.stop="displayDialog(item.art_id.toString())"
               ></van-icon>
               <span>作者:{{ item.aut_name }}</span>
               &nbsp;
