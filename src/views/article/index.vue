@@ -7,56 +7,83 @@
       title="文章详情"
     ></van-nav-bar>
     <div class="detail">
-      <h3 class="title">美女</h3>
+      <h3 class="title">{{ article.title }}</h3>
       <div class="author">
         <van-image
           round
           width="1rem"
           height="1rem"
           fit="fill"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="article.aut_photo"
         ></van-image>
         <div class="text">
-          <p class="name">123</p>
-          <p class="time">456</p>
+          <p class="name">{{ article.aut_name }}</p>
+          <p class="time">{{ article.pubdate | formatTime }}</p>
         </div>
-        <van-button round size="small" type="info">+ 关注</van-button>
+        <van-button
+          round
+          size="small"
+          :type="article.is_followed ? 'default' : 'info'"
+          >{{ article.is_followed ? "取消关注" : "+ 关注" }}</van-button
+        >
       </div>
       <div class="content">
-        <p>内容内容内容内容内容内容</p>
+        <p v-html="article.content"></p>
       </div>
       <div class="zan">
         <van-button
           round
           size="small"
-          class="active"
+          :class="{ active: article.attitude === 1 }"
           plain
           icon="like-o"
           style="margin-right:8px;"
           >点赞</van-button
         >
-        <van-button round size="small" plain icon="delete">不喜欢</van-button>
+        <van-button
+          :class="{ active: article.attitude === 0 }"
+          round
+          size="small"
+          plain
+          icon="delete"
+          >不喜欢</van-button
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { apiArticleDetail } from "@/api/article.js";
 export default {
   name: "article-detail",
   components: {},
   mixins: [],
   props: {},
   data() {
-    return {};
+    return {
+      article: {}
+    };
   },
-  computed: {},
+  computed: {
+    aid: function() {
+      return this.$route.params.aid;
+    }
+  },
   watch: {},
-  created() {},
+  created() {
+    this.getArticleDetail();
+  },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    async getArticleDetail() {
+      const result = await apiArticleDetail(this.aid);
+      this.article = result;
+      console.log(result);
+    }
+  }
 };
 </script>
 

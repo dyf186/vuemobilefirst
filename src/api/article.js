@@ -32,3 +32,10 @@ export function apiArticleReport({ articleID, type, remark = "" }) {
         }
     });
 }
+// 文章详情
+export function apiArticleDetail(articleID) {
+    return request({
+        url: '/app/v1_0/articles/' + articleID,
+        method: 'get'
+    })
+}
