@@ -50,17 +50,21 @@
           icon="delete"
           >不喜欢</van-button
         >
+        <com-comment></com-comment>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import ComComment from "./components/com-comment";
 import { apiUserFollow, apiUserUnFollow } from "@/api/user.js";
 import { apiArticleDetail } from "@/api/article.js";
 export default {
   name: "article-detail",
-  components: {},
+  components: {
+    ComComment
+  },
   mixins: [],
   props: {},
   data() {
