@@ -6,25 +6,27 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <van-cell v-for="item in list" :key="item">
+      <van-cell v-for="item in commentList" :key="item.com_id.toString()">
         <div slot="icon">
-          <img
-            class="avatar"
-            src="http://toutiao.meiduo.site/Fn6-mrb5zLTZIRG3yH3jG8HrURdU"
-            alt=""
-          />
+          <img class="avatar" :src="item.aut_photo" alt="" />
         </div>
         <div slot="title">
-          <span>只是为了好玩</span>
+          <span>{{ item.aut_name }}</span>
         </div>
         <div slot="default">
-          <van-button icon="like-o" size="mini" plain>&nbsp;12</van-button>
+          <van-button
+            icon="like-o"
+            size="mini"
+            plain
+            type="item.is_liking?'danger':'default'"
+            >&nbsp;{{ item.like_count }}</van-button
+          >
         </div>
         <div slot="label">
-          <p>hello</p>
+          <p>{{ item.content }}</p>
           <p>
-            <span>2020-7-7</span>
-            <span>4&nbsp;回复</span>
+            <span>{{ item.pubdate | formatTime }}</span>
+            <span>{{ item.reply_count }}&nbsp;回复</span>
           </p>
         </div>
       </van-cell>
@@ -33,6 +35,7 @@
 </template>
 
 <script>
+import { apiCommentList } from "@/api/comment.js";
 export default {
   name: "com-comment",
   components: {},
@@ -40,28 +43,38 @@ export default {
   props: {},
   data() {
     return {
+      commentList: [],
+      commentID: null,
       list: [],
       loading: false,
       finished: false
     };
   },
-  computed: {},
+  computed: {
+    aid() {
+      return this.$route.params.aid;
+    }
+  },
   watch: {},
   created() {},
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    onLoad() {
-      setTimeout(() => {
-        for (let i = 0; i < 5; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        this.loading = false;
-        if (this.list.length > 10) {
-          this.finished = true;
-        }
-      }, 500);
+    async onLoad() {
+      await this.$sleep(800);
+      const result = await apiCommentList({
+        articleID: this.aid,
+        commentID: this.commentID
+      });
+      console.log(this.commentList);
+      this.loading = false;
+      if (result.results.length === 0) {
+        this.finished = true;
+        return false;
+      }
+      this.commentList.push(...result.results);
+      this.commentID = result.last_id;
     }
   }
 };
