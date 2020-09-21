@@ -26,11 +26,45 @@
           <p>{{ item.content }}</p>
           <p>
             <span>{{ item.pubdate | formatTime }}</span>
-            <span>{{ item.reply_count }}&nbsp;回复</span>
+            <span @click="showReply = true"
+              >{{ item.reply_count }}&nbsp;回复</span
+            >
           </p>
         </div>
       </van-cell>
     </van-list>
+    <van-popup
+      v-model="showReply"
+      position="bottom"
+      :style="{ height: '80%' }"
+      round
+    >
+      <van-list
+        v-model="reply.loading"
+        :finished="reply.finished"
+        finished-text="没有更多了"
+        @load="onLoadReply"
+      >
+        <van-cell v-for="item in reply.list" :key="item" :title="item">
+          <div slot="icon">
+            <img
+              class="avatar"
+              src="http://toutiao.meiduo.site/Fn6-mrb5zLTZIRG3yH3jG8HrURdU"
+              alt=""
+            />
+          </div>
+          <div slot="title">
+            <span>度娘</span>
+          </div>
+          <div slot="label">
+            <p>好厉害呀</p>
+            <p>
+              <span>2020-1-1</span>
+            </p>
+          </div>
+        </van-cell>
+      </van-list>
+    </van-popup>
   </div>
 </template>
 
@@ -43,6 +77,12 @@ export default {
   props: {},
   data() {
     return {
+      showReply: false,
+      reply: {
+        list: [],
+        loading: false,
+        finished: false
+      },
       commentList: [],
       commentID: null,
       list: [],
@@ -61,6 +101,17 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    onLoadReply() {
+      setTimeout(() => {
+        for (let i = 0; i < 10; i++) {
+          this.reply.list.push(this.reply.list.length + 1);
+        }
+        this.reply.loading = false;
+        if (this.reply.list.length >= 40) {
+          this.reply.finished = true;
+        }
+      }, 1000);
+    },
     async onLoad() {
       await this.$sleep(800);
       const result = await apiCommentList({
