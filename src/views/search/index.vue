@@ -7,7 +7,8 @@
       placeholder="请输入搜索关键词"
       @search="onSearch(searchText)"
     ></van-search>
-    <van-cell-group>
+    <!--  -->
+    <van-cell-group v-if="suggestionList.length > 0">
       <van-cell
         v-for="(item, k) in suggestionList"
         :key="k"
@@ -15,6 +16,30 @@
         @click="onSearch(item)"
       >
         <div slot="title" v-html="highlightCell(item, searchText)"></div>
+      </van-cell>
+    </van-cell-group>
+    <!--  -->
+    <van-cell-group v-else>
+      <van-cell title="历史记录">
+        <van-icon
+          @click="isDeleteData = true"
+          v-show="!isDeleteData"
+          slot="right-icon"
+          name="delete"
+          style="line-height:inherit"
+        ></van-icon>
+        <div v-show="isDeleteData">
+          <span style="margin-right: 10px;">全部删除</span>
+          <span @click="isDeleteData = false">完成</span>
+        </div>
+      </van-cell>
+      <van-cell title="Vue 原码解析">
+        <van-icon
+          v-show="isDeleteData"
+          slot="right-icon"
+          name="close"
+          style="line-height:inherit"
+        ></van-icon>
       </van-cell>
     </van-cell-group>
   </div>
@@ -29,6 +54,7 @@ export default {
   props: {},
   data() {
     return {
+      isDeleteData: false,
       searchText: "",
       suggestionList: []
     };
