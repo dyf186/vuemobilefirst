@@ -23,6 +23,8 @@
         <van-button
           round
           size="small"
+          @click="followMe()"
+          :loading="followLoading"
           :type="article.is_followed ? 'default' : 'info'"
           >{{ article.is_followed ? "取消关注" : "+ 关注" }}</van-button
         >
@@ -54,6 +56,7 @@
 </template>
 
 <script>
+import { apiUserFollow, apiUserUnFollow } from "@/api/user.js";
 import { apiArticleDetail } from "@/api/article.js";
 export default {
   name: "article-detail",
@@ -62,6 +65,7 @@ export default {
   props: {},
   data() {
     return {
+      followLoading: false,
       article: {}
     };
   },
@@ -78,6 +82,52 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    async followMe() {
+      this.followLoading = true; // 开启加载状态
+
+      await this.$sleep(800); // 暂停0.8s
+
+      // 判断当前的关注状态，并做不同的处理活动
+      if (this.article.is_followed) {
+        // 取消关注
+        await apiUserUnFollow(this.article.aut_id);
+        console.log("取消关注");
+        // 页面上要更新关注状态--> + 关注 提示
+        this.article.is_followed = false;
+      } else {
+        // 关注(成功或失败)
+        try {
+          await apiUserFollow(this.article.aut_id);
+          console.log("关注");
+          // 页面上要更新关注状态-->取消关注 提示
+          this.article.is_followed = true;
+        } catch (err) {
+          this.$toast.fail("不能自己关注自己！");
+        }
+      }
+      this.followLoading = false; // 恢复按钮状态
+    },
+    // async followMe() {
+    //   this.followLoading = true;
+    //   await this.$sleep(800);
+    //   // 取消关注
+    //   if (this.article.is_followed) {
+    //     console.log(this.article.aut_id, "取消关注");
+    //     await apiUserUnFollow(this.article.aut_id);
+    //     console.log("取消关注");
+    //     this.article.is_followed = false;
+    //   } else {
+    //     // 关注
+    //     try {
+    //       console.log(this.article.aut_id, "关注");
+    //       await apiUserFollow(this.article.aut_id);
+    //       this.article.is_followed = true;
+    //     } catch (err) {
+    //       this.$toast.fail("不能自己关注自己");
+    //     }
+    //   }
+    //   this.followLoading = false;
+    // },
     async getArticleDetail() {
       const result = await apiArticleDetail(this.aid);
       this.article = result;
