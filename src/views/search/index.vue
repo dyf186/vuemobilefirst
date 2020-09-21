@@ -29,7 +29,7 @@
           style="line-height:inherit"
         ></van-icon>
         <div v-show="isDeleteData">
-          <span style="margin-right: 10px;">全部删除</span>
+          <span style="margin-right: 10px;" @click="delAll()">全部删除</span>
           <span @click="isDeleteData = false">完成</span>
         </div>
       </van-cell>
@@ -39,6 +39,7 @@
           slot="right-icon"
           name="close"
           style="line-height:inherit"
+          @click="delSuggest(k)"
         ></van-icon>
       </van-cell>
     </van-cell-group>
@@ -80,6 +81,14 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    delAll() {
+      this.suggestHistories = [];
+      localStorage.removeItem(SH);
+    },
+    delSuggest(index) {
+      this.suggestHistories.splice(index, 1);
+      localStorage.setItem(SH, JSON.stringify(this.suggestHistories));
+    },
     onSearch(keywords) {
       if (!keywords) {
         return false;
