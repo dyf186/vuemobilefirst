@@ -1,10 +1,6 @@
 <template>
   <div class="container">
-    <van-nav-bar
-      title="头条"
-      right-text="搜索"
-      @click-right="$router.push('/search')"
-    ></van-nav-bar>
+    <van-nav-bar title="头条" right-text="搜索" @click-right="$router.push('/search')"></van-nav-bar>
     <div class="my-wrapper">
       <router-view></router-view>
     </div>
@@ -12,7 +8,7 @@
       <van-tabbar-item to="/home" icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item to="/question" icon="chat-o">问答</van-tabbar-item>
       <van-tabbar-item to="/video" icon="video-o">视频</van-tabbar-item>
-      <van-tabbar-item to="/user" icon="user-o">我的</van-tabbar-item>
+      <van-tabbar-item to="/user" icon="user-o">{{$store.state.user.token?'我的':'未登录'}}</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -26,13 +22,17 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    userGo: function () {
+      return this.$store.state.user.token ? "/user" : "/login";
+    },
+  },
   watch: {},
   created() {},
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {},
 };
 </script>
 
