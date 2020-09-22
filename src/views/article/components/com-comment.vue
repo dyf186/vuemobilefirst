@@ -1,74 +1,72 @@
 <template>
   <div class="comment">
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
+    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-cell v-for="item in commentList" :key="item.com_id.toString()">
+        <!-- 作者头像 -->
         <div slot="icon">
-          <img class="avatar" :src="item.aut_photo" alt="" />
+          <img class="avatar" :src="item.aut_photo" alt />
         </div>
+        <!-- 作者名称 -->
         <div slot="title">
-          <span>{{ item.aut_name }}</span>
+          <span>{{item.aut_name}}</span>
         </div>
+        <!-- 点赞 -->
         <div slot="default">
           <van-button
             icon="like-o"
             size="mini"
             plain
             type="item.is_liking?'danger':'default'"
-            >&nbsp;{{ item.like_count }}</van-button
-          >
+          >&nbsp;{{ item.like_count }}</van-button>
         </div>
+        <!-- 评论内容和时间 -->
         <div slot="label">
           <p>{{ item.content }}</p>
           <p>
             <span>{{ item.pubdate | formatTime }}</span>
-            <span @click="showReply = true"
-              >{{ item.reply_count }}&nbsp;回复</span
-            >
+            <span @click="openReply(item.com_id.toString())">{{ item.reply_count }}&nbsp;回复</span>
           </p>
         </div>
       </van-cell>
     </van-list>
-    <van-popup
-      v-model="showReply"
-      position="bottom"
-      :style="{ height: '80%' }"
-      round
-    >
+    <!-- 回复列表展示 -->
+    <van-popup v-model="showReply" position="bottom" :style="{ height: '80%' }" round>
       <van-list
         v-model="reply.loading"
         :finished="reply.finished"
         finished-text="没有更多了"
         @load="onLoadReply"
       >
-        <van-cell v-for="item in reply.list" :key="item" :title="item">
+        <van-cell v-for="item in replyList" :key="item.com_id.toString()">
+          <!-- 作者头像 -->
           <div slot="icon">
-            <img
-              class="avatar"
-              src="http://toutiao.meiduo.site/Fn6-mrb5zLTZIRG3yH3jG8HrURdU"
-              alt=""
-            />
+            <img class="avatar" :src="item.aut_photo" alt />
           </div>
+          <!-- 作者名称 -->
           <div slot="title">
-            <span>度娘</span>
+            <span>{{item.aut_name}}</span>
           </div>
+          <!-- 回复内容和时间 -->
           <div slot="label">
-            <p>好厉害呀</p>
+            <p v-html="item.content"></p>
             <p>
-              <span>2020-1-1</span>
+              <span>{{ item.pubdate | formatTime }}</span>
             </p>
           </div>
         </van-cell>
       </van-list>
     </van-popup>
+    <div class="reply-container" van-hairline--top>
+      <van-field v-model="contentCorR" placeholder="写评论或者回复...">
+        <van-loading v-if="submitting" slot="button" type="spinner" size="16px"></van-loading>
+        <span class="submit" v-else slot="button">提交</span>
+      </van-field>
+    </div>
   </div>
 </template>
 
 <script>
+import { apiReplyList } from "@/api/reply.js";
 import { apiCommentList } from "@/api/comment.js";
 export default {
   name: "com-comment",
@@ -77,23 +75,28 @@ export default {
   props: {},
   data() {
     return {
+      contentCorR: "",
+      submitting: false,
+      nowComID: "",
+      lastID: null,
+      replyList: [],
       showReply: false,
       reply: {
         list: [],
         loading: false,
-        finished: false
+        finished: false,
       },
       commentList: [],
       commentID: null,
       list: [],
       loading: false,
-      finished: false
+      finished: false,
     };
   },
   computed: {
     aid() {
       return this.$route.params.aid;
-    }
+    },
   },
   watch: {},
   created() {},
@@ -101,22 +104,32 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    onLoadReply() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.reply.list.push(this.reply.list.length + 1);
-        }
-        this.reply.loading = false;
-        if (this.reply.list.length >= 40) {
-          this.reply.finished = true;
-        }
-      }, 1000);
+    openReply(commentID) {
+      this.nowComID = commentID;
+      this.showReply = true;
+      this.replyList = [];
+      this.reply.finished = false;
+      this.lastID = null;
+    },
+    async onLoadReply() {
+      this.$sleep(800);
+      const result = await apiReplyList({
+        commentID: this.nowComID,
+        lastID: this.lastID,
+      });
+      this.reply.loading = false;
+      if (result.results.length === 0) {
+        this.reply.finished = true;
+        return false;
+      }
+      this.replyList.push(...result.results);
+      this.lastID = result.last_id;
     },
     async onLoad() {
       await this.$sleep(800);
       const result = await apiCommentList({
         articleID: this.aid,
-        commentID: this.commentID
+        commentID: this.commentID,
       });
       console.log(this.commentList);
       this.loading = false;
@@ -126,8 +139,8 @@ export default {
       }
       this.commentList.push(...result.results);
       this.commentID = result.last_id;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -144,6 +157,19 @@ export default {
     .van-cell__label {
       width: 400px;
     }
+  }
+}
+.reply-container {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 88px;
+  width: 100%;
+  background: #f5f5f5;
+  z-index: 9999;
+  .submit {
+    font-size: 24px;
+    color: #3296fa;
   }
 }
 </style>
