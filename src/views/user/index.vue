@@ -43,7 +43,7 @@
       <van-cell icon="edit" title="编辑资料" to="/user/profile" is-link></van-cell>
       <van-cell icon="chat-o" title="小智同学" to="/user/chat" is-link></van-cell>
       <van-cell icon="setting-o" title="系统设置" is-link></van-cell>
-      <van-cell icon="warning-o" title="退出登录" to="/login" is-link></van-cell>
+      <van-cell icon="warning-o" title="退出登录" is-link @click="logout()"></van-cell>
     </van-cell-group>
   </div>
 </template>
@@ -69,8 +69,19 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    logout() {
+      this.$dialog
+        .confirm({
+          title: "退出",
+          message: "确认退出系统吗?",
+        })
+        .then(() => {
+          this.$store.commit("clearUser");
+          this.$router.push("/login");
+        })
+        .catch(() => {});
+    },
     async getUserInfo() {
-      console.log("666");
       this.userInfo = await apiUserInfo();
     },
   },
