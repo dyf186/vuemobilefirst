@@ -57,16 +57,16 @@
       </van-list>
     </van-popup>
     <div class="reply-container" van-hairline--top>
-      <van-field v-model="contentCorR" placeholder="写评论或者回复...">
+      <van-field v-model.trim="contentCorR" placeholder="写评论或者回复...">
         <van-loading v-if="submitting" slot="button" type="spinner" size="16px"></van-loading>
-        <span class="submit" v-else slot="button">提交</span>
+        <span class="submit" v-else slot="button" @click="add">提交</span>
       </van-field>
     </div>
   </div>
 </template>
 
 <script>
-import { apiReplyList } from "@/api/reply.js";
+import { apiReplyList, apiAddCorR } from "@/api/reply.js";
 import { apiCommentList } from "@/api/comment.js";
 export default {
   name: "com-comment",
@@ -104,6 +104,46 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    async add() {
+      if (!this.contentCorR) {
+        return false;
+      }
+      this.submitting = true;
+      await this.$sleep(800);
+      if (this.showReply) {
+        // 回复
+        console.log(this.nowComID, this.contentCorR, this.aid);
+        // const result = await apiAddCorR({
+        //   target: this.nowComID,
+        //   content: this.contentCorR,
+        //   art_id: this.aid,
+        // });
+        // const result = await apiAddCorR({
+        //   target: this.nowComID,
+        //   content: this.contentCorR,
+        //   art_id: this.aid,
+        // });
+        this.replyList.unshift(result.new_obj);
+        const comment = this.commentList.find(
+          (item) => item.com_id.toString() === this.nowComID
+        );
+        comment.reply_count++;
+      } else {
+        // 添加评论
+        console.log(this.aid, this.contentCorR);
+        // const result = await apiAddCorR({
+        //   target: this.aid,
+        //   content: this.contentCorR,
+        // });
+        // const result = await apiAddCorR({
+        //   target: this.aid,
+        //   content: this.contentCorR,
+        // });
+        this.commentList.unshift(result.new_obj);
+      }
+      this.contentCorR = "";
+      this.submitting = false;
+    },
     openReply(commentID) {
       this.nowComID = commentID;
       this.showReply = true;

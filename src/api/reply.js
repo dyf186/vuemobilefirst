@@ -11,3 +11,25 @@ export function apiReplyList({ commentID, lastID }) {
         }
     })
 }
+// export function apiAddCorR({ target, content, art_id = null }) {
+//     return request({
+//         url: '/app/v1_0/comments',
+//         method: 'POST',
+//         data: {
+//             target,
+//             content,
+//             art_id
+//         }
+//     })
+// }
+export function apiAddCorR({ target, content, art_id = null }) {
+    return request({
+        url: '/app/v1_0/comments',
+        method: 'POST',
+        data: {
+            target,
+            content,
+            art_id
+        }
+    })
+}
