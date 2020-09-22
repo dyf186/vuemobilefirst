@@ -1,7 +1,13 @@
 <template>
   <div class="container">
-    <van-nav-bar title="头条" right-text="搜索" @click-right="$router.push('/search')"></van-nav-bar>
-    <div class="my-wrapper">
+    <van-nav-bar
+      fixed
+      title="头条"
+      right-text="搜索"
+      @click-right="$router.push('/search')"
+      v-if="showNavBar"
+    ></van-nav-bar>
+    <div class="my-wrapper" :class="{noTop:!showNavBar}">
       <router-view></router-view>
     </div>
     <van-tabbar route>
@@ -23,6 +29,9 @@ export default {
     return {};
   },
   computed: {
+    showNavBar() {
+      return this.$route.path !== "/user";
+    },
     userGo: function () {
       return this.$store.state.user.token ? "/user" : "/login";
     },
