@@ -53,3 +53,10 @@ export function apiUserUnFollow(target) {
         method: 'delete'
     })
 }
+// 获取用户信息
+export const apiUserInfo = () => {
+    return request({
+        url: `/app/v1_0/user`,
+        method: 'GET'
+    })
+}
