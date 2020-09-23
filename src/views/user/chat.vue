@@ -74,7 +74,9 @@ export default {
     this.setSocket();
   },
   mounted() {},
-  beforeDestroy() {},
+  beforeDestroy() {
+    this.socket.colse();
+  },
   destroyed() {},
   methods: {
     scrollBottom() {
