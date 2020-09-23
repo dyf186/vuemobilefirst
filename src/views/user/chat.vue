@@ -7,17 +7,29 @@
       title="小智同学"
     ></van-nav-bar>
     <div class="chat-list">
-      <div class="chat-item left">
-        <van-image fit="cover" round :src="XZImg"></van-image>
-        <div class="chat-pao">666666666666</div>
-      </div>
-      <div class="chat-item right">
-        <div class="chat-pao">7777777777</div>
-        <van-image fit="cover" round :src="userInfo.photo" />
+      <div
+        class="chat-item"
+        :class="[item.name === 'xz' ? 'left' : 'right']"
+        v-for="(item, k) in talks"
+        :key="k"
+      >
+        <van-image
+          fit="cover"
+          round
+          v-if="item.name === 'xz'"
+          :src="XZImg"
+        ></van-image>
+        <div class="chat-pao">{{ item.msg }}</div>
+        <van-image
+          fit="cover"
+          round
+          v-if="item.name === 'vip'"
+          :src="userInfo.photo"
+        />
       </div>
     </div>
     <div class="reply-container van-hairline--top">
-      <van-field v-model="content" placeholder="说点什么">
+      <van-field v-model="content" placeholder="说点什么" @keyup.enter="send()">
         <van-loading
           v-if="loading"
           slot="button"
@@ -37,6 +49,7 @@
 </template>
 
 <script>
+import io from "socket.io-client";
 import { apiUserInfo } from "@/api/user";
 import XZImg from "@/assets/xz.png";
 export default {
@@ -46,6 +59,8 @@ export default {
   props: {},
   data() {
     return {
+      talks: [],
+      socket: null,
       userInfo: null,
       XZImg,
       content: "",
@@ -56,17 +71,85 @@ export default {
   watch: {},
   created() {
     this.getUserInfo();
+    this.setSocket();
   },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // setSocket() {
+    //   this.socket = io("http://ttapi.research.itcast.cn", {
+    //     query: {
+    //       token: this.$store.state.user.token
+    //     }
+    //   });
+    //   this.socket.on("connect", () => {
+    //     this.talks.push({
+    //       msg: "干啥呢outman，咋这长时间不联系了？",
+    //       timestamp: Date.now(),
+    //       name: "xz"
+    //     });
+    //   });
+    //   this.socket.on("message", data => {
+    //     this.talks.push({ ...data, name: "xz" });
+    //   });
+    // },
+    // 建立与 服务器端的socket连接
+    setSocket() {
+      // query代表以请求字符串形式传递token参数
+      // 请求地址为：http://ttapi.research.itcast.cn/socket.io/?token=xxx&a=xx&a=xx
+      // 其中的socket.io是内部自动添加的，不用理会
+      // 请求字符串：把参数信息通过?与请求地址做连接发送到服务器端，形式 ?name=value&name=value……
+      this.socket = io("http://ttapi.research.itcast.cn", {
+        // query:会使得参数以“请求字符串”形式挂接到请求地址的后边
+        query: {
+          token: this.$store.state.user.token
+        }
+      });
+      // io调用时会与服务器端连接，成功后会自动调用如下的connect事件
+      // 具体是服务器端通过emit()调用如下事件的
+      this.socket.on("connect", () => {
+        // 客户端与服务器连接成功后会自动调用该事件
+        // console.log('连接成功')
+        // 小智先发言，暖下场
+        this.talks.push({
+          msg: "干啥呢outman，咋这长时间不联系了？",
+          timestamp: Date.now(),
+          name: "xz"
+        }); // name:xz 表示这句话是小智同学说的
+      });
+      // 服务器端----->客户端 发送消息时候会自动调用该事件
+      // 进而接收回传回来的数据
+      this.socket.on("message", data => {
+        // data: {msg:xx,timestamp:xx}
+        this.talks.push({ ...data, name: "xz" });
+        // ... 三点是做展开运算的，形成如下效果
+        // this.talks.push({ msg:xx,timestamp:xx, name: 'xz' })
+        // 数据追加完毕，设置滚动条跑到最底部，以便显示最新数据
+        // this.scrollButtom()
+      });
+      // 服务器端----->客户端  告知连接已经关闭(非必须的)
+      this.socket.on("disconnect", () => {
+        // console.log('连接已经关闭')
+      });
+    },
     async getUserInfo() {
       this.userInfo = await apiUserInfo();
       console.log(this.userInfo.photo);
     },
-    send() {
-      console.log("111");
+    async send() {
+      if (!this.content) return false;
+      this.loading = true;
+      const obj = {
+        name: "vip",
+        msg: this.content,
+        timestamp: Date.now()
+      };
+      this.talks.push(obj);
+      this.content = "";
+      await this.$sleep(500);
+      this.socket.emit("message", obj);
+      this.loading = false;
     }
   }
 };
@@ -96,7 +179,7 @@ export default {
         vertical-align: top;
         display: inline-block;
         min-width: 80px;
-        max-width: 140px;
+        max-width: 70%;
         min-height: 80px;
         max-height: 140px;
         line-height: 76px;
