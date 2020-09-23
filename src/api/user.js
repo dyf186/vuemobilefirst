@@ -55,8 +55,15 @@ export function apiUserUnFollow(target) {
 }
 // 获取用户信息
 export const apiUserInfo = () => {
+        return request({
+            url: `/app/v1_0/user`,
+            method: 'GET'
+        })
+    }
+    // 获取用户个人资料
+export function apiUserProfile() {
     return request({
-        url: `/app/v1_0/user`,
-        method: 'GET'
+        url: '/app/v1_0/user/profile',
+        method: 'get'
     })
 }
