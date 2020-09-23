@@ -39,7 +39,11 @@
     </van-cell-group>
     <!-- 图片 -->
     <van-popup v-model="showPhoto" position="bottom">
-      <van-cell si-link title="本地相册选择图片"></van-cell>
+      <van-cell
+        @click="$refs.mypic.click()"
+        si-link
+        title="本地相册选择图片"
+      ></van-cell>
       <van-cell is-link title="拍照"></van-cell>
     </van-popup>
     <!-- 昵称 -->
@@ -69,12 +73,18 @@
         @confirm="confirmDate"
       ></van-datetime-picker>
     </van-popup>
+    <input
+      ref="mypic"
+      @change="startUpload()"
+      type="file"
+      style="display: none;"
+    />
   </div>
 </template>
 
 <script>
 import dayjs from "dayjs";
-import { apiUserProfile } from "@/api/user.js";
+import { apiUserProfile, apiUserPhoto } from "@/api/user.js";
 export default {
   name: "user-profile",
   components: {},
@@ -106,6 +116,13 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    async startUpload() {
+      const fd = new FormData();
+      fd.append("photo", this.$refs.mypic.files[0]);
+      const result = await apiUserPhoto(fd);
+      this.userProfile.photo = result.photo;
+      this.showPhoto = false;
+    },
     confirmDate(val) {
       this.userProfile.birthday = dayjs(val).format("YYYY-MM-DD");
       this.showBirthday = false;

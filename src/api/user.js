@@ -14,12 +14,12 @@ export function apiUserLogin({ mobile, code }) {
 // 关注
 export function apiFollow(target) {
     return request({
-        url: '/app/v1_0/user/followings',
-        method: 'post',
+        url: "/app/v1_0/user/followings",
+        method: "post",
         data: {
             target
         }
-    })
+    });
 }
 /**
  * 关注作者
@@ -27,21 +27,21 @@ export function apiFollow(target) {
  */
 export function apiUserFollow(target) {
     return request({
-        url: '/app/v1_0/user/followings',
-        method: 'post',
+        url: "/app/v1_0/user/followings",
+        method: "post",
         data: {
             // 成员简易赋值 target:target
             target: target
         }
-    })
+    });
 }
 
 // 取消关注
 export function apiUnFollow(target) {
     return request({
         url: `/app/v1_0/user/followings/${target}`,
-        method: 'delete',
-    })
+        method: "delete"
+    });
 }
 /**
  * 取消关注作者
@@ -50,20 +50,28 @@ export function apiUnFollow(target) {
 export function apiUserUnFollow(target) {
     return request({
         url: `/app/v1_0/user/followings/${target}`,
-        method: 'delete'
-    })
+        method: "delete"
+    });
 }
 // 获取用户信息
 export const apiUserInfo = () => {
-        return request({
-            url: `/app/v1_0/user`,
-            method: 'GET'
-        })
-    }
-    // 获取用户个人资料
+    return request({
+        url: `/app/v1_0/user`,
+        method: "GET"
+    });
+};
+// 获取用户个人资料
 export function apiUserProfile() {
     return request({
-        url: '/app/v1_0/user/profile',
-        method: 'get'
-    })
+        url: "/app/v1_0/user/profile",
+        method: "get"
+    });
+}
+// 编辑用户照片资料
+export function apiUserPhoto(fdObj) {
+    return request({
+        url: "/app/v1_0/user/photo",
+        method: "patch",
+        data: fdObj
+    });
 }
