@@ -8,20 +8,12 @@
     ></van-nav-bar>
     <div class="chat-list">
       <div class="chat-item left">
-        <van-image
-          fit="cover"
-          round
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        ></van-image>
+        <van-image fit="cover" round :src="XZImg"></van-image>
         <div class="chat-pao">666666666666</div>
       </div>
       <div class="chat-item right">
         <div class="chat-pao">7777777777</div>
-        <van-image
-          fit="cover"
-          round
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        ></van-image>
+        <van-image fit="cover" round :src="userInfo.photo" />
       </div>
     </div>
     <div class="reply-container van-hairline--top">
@@ -45,6 +37,8 @@
 </template>
 
 <script>
+import { apiUserInfo } from "@/api/user";
+import XZImg from "@/assets/xz.png";
 export default {
   name: "user-chat",
   components: {},
@@ -52,17 +46,25 @@ export default {
   props: {},
   data() {
     return {
+      userInfo: null,
+      XZImg,
       content: "",
       loading: false
     };
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.getUserInfo();
+  },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    async getUserInfo() {
+      this.userInfo = await apiUserInfo();
+      console.log(this.userInfo.photo);
+    },
     send() {
       console.log("111");
     }
