@@ -6,7 +6,7 @@
       @click-left="$router.back()"
       title="小智同学"
     ></van-nav-bar>
-    <div class="chat-list">
+    <div class="chat-list" ref="talkArea">
       <div
         class="chat-item"
         :class="[item.name === 'xz' ? 'left' : 'right']"
@@ -77,6 +77,11 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    scrollBottom() {
+      this.$nextTick(() => {
+        this.$refs.talkArea.scrollTop = this.$refs.talkArea.scrollHeight;
+      });
+    },
     // setSocket() {
     //   this.socket = io("http://ttapi.research.itcast.cn", {
     //     query: {
@@ -126,7 +131,7 @@ export default {
         // ... 三点是做展开运算的，形成如下效果
         // this.talks.push({ msg:xx,timestamp:xx, name: 'xz' })
         // 数据追加完毕，设置滚动条跑到最底部，以便显示最新数据
-        // this.scrollButtom()
+        this.scrollBottom();
       });
       // 服务器端----->客户端  告知连接已经关闭(非必须的)
       this.socket.on("disconnect", () => {
@@ -146,6 +151,7 @@ export default {
         timestamp: Date.now()
       };
       this.talks.push(obj);
+      this.scrollBottom();
       this.content = "";
       await this.$sleep(500);
       this.socket.emit("message", obj);
