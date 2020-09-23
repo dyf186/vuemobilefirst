@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-wrapper">
+  <div class="scroll-wrapper" @scroll="remember()" ref="myarticle">
     <van-pull-refresh
       v-model="isLoading"
       @refresh="onRefresh"
@@ -80,6 +80,7 @@ export default {
   },
   data() {
     return {
+      qianTop: 0,
       downSuccessText: "",
       nowArticleID: "",
       showDialog: false,
@@ -96,10 +97,18 @@ export default {
   created() {
     this.getArticleList();
   },
+  activated() {
+    if (this.qianTop) {
+      this.$refs.myarticle, (scrollTop = this.qianTop);
+    }
+  },
   mounted() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    remember() {
+      this.qianTop = this.$refs.myarticle.scrollTop;
+    },
     handleDislikeSuccess() {
       const index = this.articleList.findIndex(
         item => item.art_id.toString() === this.nowArticleID
