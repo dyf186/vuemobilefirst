@@ -75,3 +75,15 @@ export function apiUserPhoto(fdObj) {
         data: fdObj
     });
 }
+// 更新用户资料
+export function apiSaveProfile({ name, gerder, birthday }) {
+    return request({
+        url: "/app/v1_0/user/profile",
+        method: "patch",
+        data: {
+            name,
+            gerder,
+            birthday
+        }
+    });
+}

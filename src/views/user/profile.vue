@@ -84,7 +84,7 @@
 
 <script>
 import dayjs from "dayjs";
-import { apiUserProfile, apiUserPhoto } from "@/api/user.js";
+import { apiUserProfile, apiUserPhoto, apiSaveProfile } from "@/api/user.js";
 export default {
   name: "user-profile",
   components: {},
@@ -135,7 +135,8 @@ export default {
       this.userProfile = await apiUserProfile();
       this.nowDate = new Date(this.userProfile.birthday);
     },
-    save() {
+    async save() {
+      await apiSaveProfile(this.userProfile);
       // 提示信息
       this.$toast.success("保存成功");
     }
